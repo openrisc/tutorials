@@ -65,7 +65,7 @@ jtag interface for OpenOCD to talk to.  Much debugging can be done
 directly in OpenOCD.  GDB communicates with OpenOCD to provide a familiar
 debugging environment for programmers.  For more details see:
 
- * [Debugging OpenRISC](docs/Debugging.md)
+ * [Debugging OpenRISCi FPGAs with OpenOCD](docs/Debugging.html)
 
 ## Tools (partially required)
 

@@ -9,29 +9,27 @@ layout: home
 
 #### Software
 
-* Linux source code with OpenRISC patches
-* or1k-elf toolchain
+* Linux source code
+* `or1k-elf` or `or1k-linux` toolchain [Releases](https://github.com/stffrdhrn/or1k-toolchain-build/releases)
 * or1ksim (optional)
-* or1k-linux toolchain (optional)
-
-#### Files
-* Device tree file (*.dts, optional)
-* Default Linux configuration (*_defconfig, optional)
 
 ### Setting up
 
 OpenRISC is officially supported in the Linux kernel since 2011 and can be downloaded from https://www.kernel.org.
-We do however recommend that you use the kernel from https://github.com/openrisc/linux/ as it contains some convenient
-features such as a built-in initramfs and extra board configurations for OpenRISC not found in the upstream kernel.
 
 #### Get Linux source code
-git clone https://github.com/openrisc/linux
+
+```
+git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+```
 
 #### Set up Linux source code
 
+```
     cd linux
     export ARCH=openrisc
     export CROSS_COMPILE=or1k-elf-
+```
 
 The device tree file (.dts) is used to specify hardware configuration settings, such as base addresses and interrupt numbers
 for peripherals, memory sizes, the numbers of CPUs in the system and other things. If no custom device tree is used, a default one
@@ -77,5 +75,5 @@ halt; load_image vmlinux; reg r3 0; reg npc 0x100; resume
 The kernel image is now available as an elf file called `vmlinux`. This file can be used as any other bare-metal program for OpenRISC. To test the Linux image, you can:
 * Run it in the reference C simulator (or1ksim)
 * Run it on a simulated RTL model (Most likely extremely slow, unless using verilator)
-* [Load it to RAM on an FPGA board with a debugger](Debugging.md)
+* [Load it to RAM on an FPGA board with a debugger](Debugging.html)
 * Program it to non-volatile flash on an FPGA board

@@ -1,10 +1,15 @@
+---
+title: De0 Nano Tutorial
+layout: page
+---
+
 ## DE0 Nano Tutorial
 
 If you downloaded the tutorials as a release archive, you can directly
 start. If you have cloned the git repository, you instead need to
 follow the instructions for building the hardware and software as
 described below. Please also follow the
-[common tutorial setup](../README.md).
+[common tutorial setup](../index.html).
 
 To run the demo you need:
 

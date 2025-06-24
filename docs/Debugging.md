@@ -1,19 +1,28 @@
 ---
-title: Debugging
+title: Debugging FPGAs with OpenOCD and GDB
 layout: home
 ---
 
-## Debugging OpenRISC
+### Prerequisites
 
-The OpenRISC cpu, simulator and toolchain provide a full debugging
-environment with gdb and OpenOCD.  At a low level this is provided with
-[adv_debug_sys](https://github.com/olofk/adv_debug_sys) which provides
-jtag interface for OpenOCD to talk to.  Much can be done directly in OpenOCD. But
-for a full debug environments we recommend GDB. GDB communicates with OpenOCD as
-a remote target and provides a familiar debugging environment for programmers.
+#### Software
+
+* `or1k-elf` toolchain with gdb [Releases](https://github.com/stffrdhrn/or1k-toolchain-build/releases)
+* OpenOCD
+* A running OpenRISC SoC using `adv_debug_sys`
+
+## Debugging OpenRISC on FPGAs
+
+The OpenRISC cpu and toolchain provide a full debugging environment when running
+on FPGAs using gdb and OpenOCD.  At a low level this is provided with
+[adv_debug_sys](https://github.com/olofk/adv_debug_sys) which provides jtag
+interface for OpenOCD to talk to.  Much can be done directly in OpenOCD. But for
+a full debug environments we recommend GDB. GDB communicates with OpenOCD as a
+remote target and provides a familiar debugging environment for programmers.
 
 ### OpenOCD Basics
 
+OpenOCD is a brirdge for accessing hardware connected to a workstation via JTAG.
 OpenOCD requires a configuration file to start up.  The configuration files
 specify the chips details (jtag tap) and the details of the interface we are
 using.
@@ -75,7 +84,7 @@ reg npc 0x100
 # Resume execution after a halt
 resume
 
-# For loading a linux image you can do it all at one time. 
+# For loading a linux image you can do it all at one time.
 # Notice here we also reset r3 which linux uses as a bootargs
 # vector.
 halt; load_image vmlinux; reg r3 0; reg npc 0x100; resume
@@ -114,7 +123,12 @@ exit
 
 ### GDB Basics
 
-When we run GDB we do remote debugging
+[GDB](https://sourceware.org/gdb/) is a very popular debugger that allows
+inspecting programs running on a cpu (target).
+
+When we debug OpenRISC cpus running on FPGAs GDB connects to the remote OpenRISC
+target via the debug tcp port provided by OpenOCD.  Once OpenOCD is running we
+can start GDB as follows:
 
 ```
 # Starting up gdb (with a remote target)
@@ -264,6 +278,6 @@ These commands and further reading should get you started.
 
 ### Further Reading
 
-* http://openocd.org/doc/html/ - OpenOCD User Guide
-* http://www.fpga4fun.com/JTAG2.html - How JTAG works
-* https://sourceware.org/gdb/onlinedocs/gdb/ - Debugging with GDB
+* [OpenOCD Docs](http://openocd.org/doc/html/) - OpenOCD User Guide
+* [JTAG](http://www.fpga4fun.com/JTAG2.html) - How JTAG works
+* [GDD Docs](https://sourceware.org/gdb/onlinedocs/gdb/) - Debugging with GDB
