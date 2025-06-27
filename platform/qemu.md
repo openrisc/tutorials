@@ -41,7 +41,7 @@ If the output is `Hello World!`, then everything is working correctly.
 The following exercise will make a very simple bare-metal or1k system with our hello.c program as the "kernel". 
 
 ## Install QEMU (From Source)
-Running QEMU full-system emulation requires a separate binary from the user mode. On Ubuntu, you can run\
+Running QEMU full-system emulation means you need to run a different QEMU binary than what you used for the user mode. On Ubuntu, you can run\
 `sudo apt install qemu-system`. **However**, this will download a quite old version of QEMU (likely version 8.2.2) and this does not work with this tutorial. This tutorial was tested to be working on QEMU version 9.2.2.
 
 Because of this, we show how to build QEMU below:
@@ -59,16 +59,18 @@ cd qemu-9.2.2 && ./configure
 ```
 
 Note that during this step, you may encounter a lot of issues with [dependencies required for QEMU](https://www.qemu.org/docs/master/devel/build-environment.html#debian-ubuntu).
-4. Finally, run `make`. The generated binaries should be found inside /build.
+
+4. Finally, run `make`. The generated binaries should be found inside `/build`.
 
 ## Cross-compile the Program
-Since we want to run hello.c bare-metal (no OS like linux to handle the execution), we need to use the [newlib toolchain](https://openrisc.io/software#newlib-toolchain). Download the toolchain and untar it like we did for QEMU.
+Since we want to run `hello.c` bare-metal (no OS like linux to handle the execution), we need to use the newlib toolchain. [Download the toolchain](https://openrisc.io/software#newlib-toolchain) and untar it like we did for QEMU.
 ```
 wget https://github.com/stffrdhrn/or1k-toolchain-build/releases/download/or1k-15.1.0-20250621/or1k-elf-15.1.0-20250621.tar.xz
 tar -xf or1k-elf-15.1.0-20250621
 export PATH=$PATH:<path of or1k-elf bin folder>
 ```
 > One important thing to note is that compiling a C program using a bare-metal cross-toolchain like `or1k-elf-` results in a binary code that directly runs on the hardware. For example, `printf()` in source code gets translated into writing bytes to the UART by `or1k-elf-`. In contrast, `or1k-none-linux-musl-` will translate it into a `write` system call, which in turns gets further handled by the linux OS. 
+
 
 Then we compile the code, *but* for a specific board. This is done by passing `-mboard` option. There are two boards that can work: `or1ksim-uart` or `ordb1a3pe1500`. The full list can be found [here](https://github.com/openrisc/newlib/tree/or1k/libgloss/or1k/boards).
 ```
@@ -83,4 +85,4 @@ or1k-elf-gcc -mboard=or1ksim-uart hello.c -o hello.qemu
 ```
 The expected result of the run should be `Hello World!` being printed out and then hanging. 
 
-> If you compiled the program without passing `-mboard=` flag or with something other than 2 boards mentioned above, you may not see any output. [QEMU by default uses or1ksim board](https://www.qemu.org/docs/master/system/target-openrisc.html#choosing-a-board-model) when the board is not specified using `-M` flag like we did above. And it uses specific memory layout and configuration that can be found [here](https://github.com/qemu/qemu/blob/master/hw/openrisc/openrisc_sim.c). In order for serial output to be captured and displayed properly by the QEMU or1ksim, its UART configuration (correctly memory mapped, baud rate and IRQ) should match that that of the binary. [`or1ksim-uart`](https://github.com/openrisc/newlib/blob/or1k/libgloss/or1k/boards/or1ksim-uart.S) and [`ordb1a3pe1500`](https://github.com/openrisc/newlib/blob/or1k/libgloss/or1k/boards/ordb1a3pe1500.S) happen to have the matching configuration and allow the compiler to generate binaries that can work well with QEMU (if I have to _just_ one, I would pick `ordb1a3pe1500`, because it has 20MHz clock frequency just like QEMU or1ksim as opposed to 100MHz). 
+> If you compiled the program without passing `-mboard=` flag or with something other than 2 boards mentioned above, you may not see any output. [QEMU by default uses or1ksim board](https://www.qemu.org/docs/master/system/target-openrisc.html#choosing-a-board-model) when the board is not specified using `-M` flag like we did above. And it uses specific memory layout and configuration that can be found [here](https://github.com/qemu/qemu/blob/master/hw/openrisc/openrisc_sim.c). In order for serial output to be captured and displayed properly by the QEMU or1ksim, its UART configuration (memory-mapped address, baud rate and IRQ) should match that of the binary. [`or1ksim-uart`](https://github.com/openrisc/newlib/blob/or1k/libgloss/or1k/boards/or1ksim-uart.S) and [`ordb1a3pe1500`](https://github.com/openrisc/newlib/blob/or1k/libgloss/or1k/boards/ordb1a3pe1500.S) happen to have the matching configuration and allow the compiler to generate binaries that can work well with QEMU (if I have to pick the _best_ one for this, I would pick `ordb1a3pe1500`, because it has 20MHz clock frequency just like QEMU or1ksim as opposed to 100MHz). 
