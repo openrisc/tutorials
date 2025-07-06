@@ -1,8 +1,15 @@
 ---
 title: or1ksim
 layout: page
+parent: Platforms
+nav_order: 2
 ---
 
+# Files
+
+ - [or1ksim.cfg](or1ksim.cfg) - config needed for or1ksim
+ - [or1ksim-2025-04-27.tar.gz](https://github.com/openrisc/or1ksim/releases/download/2025-04-27/or1ksim-2025-04-27.tar.gz)
+ - [timer.c](./sw/timer/timer.c) - timer program
 # or1ksim Tutorial
 
 If you downloaded the tutorials as a release archive, you can directly
@@ -15,7 +22,7 @@ To run the demo you need:
 
 * `or1k-sim` in your `PATH`, check with
 
-		or1k-sim --version
+	or1k-sim --version
 
 ## Run hello world
 
@@ -51,3 +58,7 @@ DE0 nano board by running
 
 	make build-sw
 
+## Links
+
+ - [openrisc/or1ksim](https://github.com/openrisc/or1ksim) - The home page and git repo
+ - [Releases](https://github.com/openrisc/or1ksim/releases) - Nightly build and point release

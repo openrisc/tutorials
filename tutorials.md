@@ -1,6 +1,7 @@
 ---
 layout: page
 title: Further Reading
+nav_layout: 99
 ---
 
 This section contains guides and information found around the web that help

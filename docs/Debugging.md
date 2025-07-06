@@ -1,6 +1,7 @@
 ---
 title: Debugging FPGAs with OpenOCD and GDB
 layout: home
+parent: Platforms
 ---
 
 ### Prerequisites

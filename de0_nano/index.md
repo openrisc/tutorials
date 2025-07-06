@@ -1,6 +1,7 @@
 ---
-title: De0 Nano Tutorial
+title: De0 Nano
 layout: page
+parent: Platforms
 ---
 
 ## DE0 Nano Tutorial

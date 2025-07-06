@@ -1,6 +1,6 @@
 title: OpenRISC Tutorials
 theme: just-the-docs
-color_scheme: dark
+color_scheme: or1k
 repository: openrisc/tutorials
 
 include: ['debugging', 'de0_nano', 'docs', 'or1ksim', 'platform', 'sw']

@@ -1,0 +1,13 @@
+@import "./color_schemes/dark";
+
+$link-color: #4cb4e8;
+a {
+	color:$link-color;
+	&:hover {
+		color: lighten($link-color, 30);
+		text-decoration:none;
+	}
+	transition: all 0.3s;
+}
+
+

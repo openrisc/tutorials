@@ -1,6 +1,7 @@
 ---
 title: Linux
-layout: home
+layout: page
+nav_order: 5
 ---
 
 ## Build OpenRISC linux image

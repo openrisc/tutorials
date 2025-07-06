@@ -1,7 +1,8 @@
 ---
 title: QEMU
-layout: home
+layout: page
 nav_order: 2
+parent: Platforms
 ---
 
 The objective of this tutorial is to run a Hello World program on QEMU. The prerequisite is to have a [cross-compiler](https://openrisc.io/software) for OpenRISC 1000 (or1k). And don't forget to add it to the `PATH` .
