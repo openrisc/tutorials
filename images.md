@@ -133,13 +133,15 @@ podman run -it --rm stffrdhrn/or1k-verilog-env
 This will bring you to the container prompt which
 has access to the verilog development environment.
 
-```
 Create the `hello.c` file as described above, then to compile our program run
 `gcc` from the OpenRISC toolchain as below:
 
 ```bash
 or1k-elf-gcc hello.c -o hello
 ```
+
+This will compile our Hello World program using the OpenRISC baremetal toolchain
+and output an ELF file to `hello`.
 
 After our program is compiled we want to prepare to run the program, check that the
 fusesoc environment is setup correctly using the following commands:
@@ -153,7 +155,7 @@ Changing directories to `/tmp/src/cores` is needed as fusesoc looks
 for verilog IP cores starting in the current directory.  The `fusesoc core-info`
 command checks if our `mor1kx-generic` SoC is available as expected.
 
-To compile to verilog SoC and run it we use:
+To compile and run the verilog SoC we use:
 
 ```bash
 fusesoc run --target mor1kx_tb mor1kx-generic --elf_load ../hello
