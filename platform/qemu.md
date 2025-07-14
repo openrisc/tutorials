@@ -55,7 +55,7 @@ tar -xf qemu-9.2.2.tar.xz
 ```
 3. Go inside the root directory and run configure
 ```
-cd qemu-9.2.2 && ./configure
+cd qemu-9.2.2 && ./configure --target-list="or1k-linux-user or1k-softmmu"
 ```
 
 Note that during this step, you may encounter a lot of issues with [dependencies required for QEMU](https://www.qemu.org/docs/master/devel/build-environment.html#debian-ubuntu).
