@@ -47,7 +47,7 @@ Running QEMU full-system emulation means you need to run a different QEMU binary
 Because of this, we show how to build QEMU below:
 1. Grab a tar ball from https://download.qemu.org/ for the version you like (preferably 9.2.2 or higher)
 ```
-wget https://download.qemu.org/qemu-9.2.2.tar.xz
+curl -O -L https://download.qemu.org/qemu-9.2.2.tar.xz
 ```
 2. Untar it
 ```
@@ -65,7 +65,7 @@ Note that during this step, you may encounter a lot of issues with [dependencies
 ## Cross-compile the Program
 Since we want to run `hello.c` bare-metal (no OS like linux to handle the execution), we need to use the newlib toolchain. [Download the toolchain](https://openrisc.io/software#newlib-toolchain) and untar it like we did for QEMU.
 ```
-wget https://github.com/stffrdhrn/or1k-toolchain-build/releases/download/or1k-15.1.0-20250621/or1k-elf-15.1.0-20250621.tar.xz
+curl -O -L https://github.com/stffrdhrn/or1k-toolchain-build/releases/download/or1k-15.1.0-20250621/or1k-elf-15.1.0-20250621.tar.xz
 tar -xf or1k-elf-15.1.0-20250621
 export PATH=$PATH:<path of or1k-elf bin folder>
 ```
