@@ -26,7 +26,7 @@ This downloads all free and open tools. Unfortunately, you will still
 need to install closed (but free) tools from the FPGA vendors:
 
 * [Altera Quartus Prime](#altera-quartus-prime) for Altera FPGAs
-  ([DE0 nano](de0_nano/README.md).
+  ([DE0 nano](de0_nano/)).
 
 You can now start with the [tutorials](#tutorials).
 
