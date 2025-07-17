@@ -32,8 +32,8 @@ programs to run on or1ksim.
 We break this tutorial down into parts:
 
  - Downloading the pieces
- - Compiling a program
- - Running a program
+ - Compiling programs
+ - Running programs
  - Interacting with the simulator
 
 ## Downloading the Pieces
@@ -66,7 +66,7 @@ tar -xf or1k-elf-15.1.0-20250621.tar.xz
 export PATH=$PATH:$PWD/or1k/bin:$PWD/or1k-elf/bin
 ```
 
-## Compiling a program
+## Compiling Programs
 
 To compile programs for or1ksim we use the newlib baremetal toolchain. Binaries
 produced by this can run directly on systems with no Operating System.  We use
@@ -79,7 +79,7 @@ or1k-elf-gcc -g -Og $CFLAGS -o hello.elf hello.c
 or1k-elf-gcc -g -Og $CFLAGS -o timer.elf timer.c
 ```
 
-## Run hello world
+## Running Programs
 
 To run the demo you need `or1k-elf-sim` in your `PATH`, check with:
 
@@ -87,13 +87,13 @@ To run the demo you need `or1k-elf-sim` in your `PATH`, check with:
 or1k-elf-sim --version
 ```
 
-We can then run our program with the following:
+We can then run our first *Hello Wolrd* example program with the following:
 
 ```bash
 or1k-elf-sim -f or1ksim.cfg hello.elf
 ```
 
-You can find that the last output is `Hello World!`. or1ksim can be
+If everything worked we will see the last output is `Hello World!`. or1ksim can be
 much more verbose and give you a full execution trace:
 
 	or1k-elf-sim -f or1ksim.cfg hello.elf -t
@@ -103,12 +103,71 @@ while. You can finish the simulation before with `CTRL+C`, which will
 take you to the simulators command line (`(sim) `). You can exit the
 command line with `quit`.
 
-## Run the timer example
+### Run the timer example
+
+A more advanced example is the timer example which uses `or1k_timer_*` APIs from the
+newlib or1k [timer module](https://openrisc.io/newlib/docs/html/group__or1k__timer.html) to setup a 1 second timer.
 
 	or1k-elf-sim -f or1ksim.cfg timer.elf
 
 In the terminal you can see an UART output every *simulated*
-second. You can quit this as described before.
+second. You can quit the simulation as described before.
+
+## Interacting with the simulator
+
+When we press `CTRL+C` when running the timer example the simulator will
+continue to run.  We can interact with the simulator console at this time.
+
+Some example commands to check are:
+
+ - `help` - show help about all commands
+ - `r` - show all registers
+ - `info` - show all system info
+ - `stall` - resumes the program
+
+### Example output
+
+```
+(sim) info
+VR   : 0x12000001  UPR  : 0x00000619
+SR   : 0x00008203
+MACLO: 0x00000000  MACHI: 0x00000000
+EPCR0: 0x00006688  EPCR1: 0x00000000
+EEAR0: 0x00000000  EEAR1: 0x00000000
+ESR0 : 0x00008203  ESR1 : 0x00000000
+TTMR : 0x600f4240  TTCR : 0x00000081
+PICMR: 0x00000003  PICSR: 0x00000000
+PPC:   0x00002294  NPC   : 0x00000000
+
+..
+SPR_ITLBMR way 0 set 59 =  |  | ITLBMR_VPN = 00000000
+SPR_ITLBTR way 0 set 59 = ITLBTR_PPN = 00000000
+SPR_ITLBMR way 0 set 60 =  |  | ITLBMR_VPN = 00000000
+SPR_ITLBTR way 0 set 60 = ITLBTR_PPN = 00000000
+SPR_ITLBMR way 0 set 61 =  |  | ITLBMR_VPN = 00000000
+SPR_ITLBTR way 0 set 61 = ITLBTR_PPN = 00000000
+SPR_ITLBMR way 0 set 62 =  |  | ITLBMR_VPN = 00000000
+SPR_ITLBTR way 0 set 62 = ITLBTR_PPN = 00000000
+SPR_ITLBMR way 0 set 63 =  |  | ITLBMR_VPN = 00000000
+SPR_ITLBTR way 0 set 63 = ITLBTR_PPN = 00000000
+
+(sim) r
+00002294:                13fffffd  l.bf -3 (executed) [cycle 166500035, #149819510]
+00002298:                15000000  l.nop 0 (next insn) (delay insn)
+GPR00: 00000000  GPR01: 007fdff8  GPR02: 007fe000  GPR03: 00000001
+GPR04: 90000000  GPR05: 00009588  GPR06: 00000000  GPR07: 00000000
+GPR08: 00008b5c  GPR09: 00002290  GPR10: 00000000  GPR11: 00000042
+GPR12: 00000000  GPR13: 000069ec  GPR14: 00000000  GPR15: ffffffff
+GPR16: 00000042  GPR17: 00010000  GPR18: 00000000  GPR19: 00008001
+GPR20: 00000000  GPR21: 00000011  GPR22: 00000000  GPR23: fffffffd
+GPR24: 00000000  GPR25: 000069dc  GPR26: 00000000  GPR27: ffffefff
+GPR28: 00000000  GPR29: 00000000  GPR30: 00000000  GPR31: 00009394  flag: 1
+(sim) stall
+A second elapsed
+A second elapsed
+A second elapsed
+A second elapsed
+```
 
 ## Next steps
 

@@ -38,7 +38,6 @@ We break this tutorial down into parts:
  - Downloading the pieces
  - Compiling the kernel
  - Running the kernel
- - Interacting with the simulator
  - Adding custom userspace programs
 
 ## Downloading the Pieces
@@ -71,7 +70,7 @@ tar -xf or1k-none-linux-musl-15.1.0-20250621.tar.xz
 export PATH=$PATH:$PWD/or1k/bin:$PWD/or1k-none-linux-musl/bin
 ```
 
-## Building Linux
+## Compiling the Kernel
 
 To build a Linux kernel we use the toolchain, kernel source code and rootfs just downloaded
 in the following make commands:
@@ -105,7 +104,7 @@ that is build directly into our kernel ELF binary.  This is one of the most simp
 but it means that our data will be lost after reset.  Also, it means that updating userspace utilties
 requires rebuilding the kernel.
 
-## Booting the System
+## Running the Kernel
 
 To start Linux on `or1ksim` we run `or1k-elf-sim` passing the kernel as an argument.
 This will:
@@ -136,7 +135,7 @@ To exit `or1ksim` press: `Ctrl+c`
 
 To exit `telnet` press: `Ctrl+]`
 
-## Adding User Space Programs
+## Adding Custom User Space Programs
 
 To add your own programs to the rootfs you can use the [musl](https://musl.libc.org)
 toolchain to build executables as follows:
