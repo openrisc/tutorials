@@ -18,7 +18,7 @@ nav_order: 2
 We will download these below.
 
  - [or1ksim.cfg](https://github.com/stffrdhrn/or1k-utils/raw/refs/heads/master/or1ksim.cfg) - config needed for or1ksim
- - [or1ksim-2025-04-27.tar.gz](https://github.com/openrisc/or1ksim/releases/download/2025-04-27/or1ksim-2025-04-27.tar.gz) - The OpenRISC simulator source code
+ - [or1ksim-2025-04-27.tar.gz](https://github.com/openrisc/or1ksim/releases/download/2025-04-27/or1ksim-2025-04-27.tar.gz) - The OpenRISC simulator
  - [or1k-none-linux-musl-15.1.0-20250621.tar.xz](https://github.com/stffrdhrn/or1k-toolchain-build/releases/download/or1k-15.1.0-20250621/or1k-none-linux-musl-15.1.0-20250621.tar.xz) - OpenRISC musl linux userspace toolchain
  - [linux-6.15.5.tar.xz](https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.15.5.tar.xz) - Linux kernel source code
  - [busybox-small-rootfs-20250708.tar.xz](https://github.com/stffrdhrn/or1k-rootfs-build/releases/download/or1k-20250708/busybox-small-rootfs-20250708.tar.xz) - Linux rootfs for userspace programs

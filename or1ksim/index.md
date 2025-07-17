@@ -10,24 +10,25 @@ nav_order: 2
 #### System
 
  - An x86 Linux workstation
- - The `curl` and `telnet` command line utilities
+ - The `curl` command line utility
 
 #### Files
 
 We will download these below.
 
  - [or1ksim.cfg](or1ksim.cfg) - config needed for or1ksim
- - [or1ksim-2025-04-27.tar.gz](https://github.com/openrisc/or1ksim/releases/download/2025-04-27/or1ksim-2025-04-27.tar.gz) - The OpenRISC simulator source code
- - [timer.c](./sw/timer/timer.c) - timer program
+ - [hello.c](../sw/hello/hello.c) - hello world program
+ - [timer.c](../sw/timer/timer.c) - timer program
+ - [or1ksim-2025-04-27.tar.gz](https://github.com/openrisc/or1ksim/releases/download/2025-04-27/or1ksim-2025-04-27.tar.gz) - The OpenRISC simulator
 
 # or1ksim Tutorial
 
 The or1ksim program is the OpenRISC [instruction set simulator](https://en.wikipedia.org/wiki/Instruction_set_simulator) which
-provides accurate tracing. A simulator is a fast way to debug and ensure
+provides accurate tracing of OpenRISC programs. A simulator is a fast way to debug and ensure
 your software works before deploying it to real hardware.
 
-In this tutorial we will cover getting and building or1ksim, and building simple
-programs to run on or1ksim.
+In this tutorial we will cover getting or1ksim, and building simple programs to
+run on or1ksim.
 
 We break this tutorial down into parts:
 
@@ -42,7 +43,7 @@ To get started we will create a temporary directly and setup our environment, if
 you plan to do a lot of OpenRISC development consider adding these tools to your
 `PATH` permanently.
 
-To get everything you need run:
+To get everything run:
 
 ```bash
 mkdir /tmp/or1ksim/
@@ -77,6 +78,22 @@ or1ksim.  This includes RAM size, address loctions for UART and UART baud rates.
 CFLAGS="-mboard=or1ksim-uart"
 or1k-elf-gcc -g -Og $CFLAGS -o hello.elf hello.c
 or1k-elf-gcc -g -Og $CFLAGS -o timer.elf timer.c
+```
+
+The `-mboard=` option tells the toolchain to link in our board settings, you can see
+the available boards by looking in the toolchain native lib directory:
+
+```
+/tmp/or1ksim $ ls -l or1k-elf/or1k-elf/lib/libboard-*
+-rw-r--r--. 1 shorne shorne 1178 Jun 21 07:04 or1k-elf/or1k-elf/lib/libboard-atlys.a
+-rw-r--r--. 1 shorne shorne 1178 Jun 21 07:04 or1k-elf/or1k-elf/lib/libboard-de0_nano.a
+-rw-r--r--. 1 shorne shorne 1178 Jun 21 07:04 or1k-elf/or1k-elf/lib/libboard-ml501.a
+-rw-r--r--. 1 shorne shorne 1482 Jun 21 07:04 or1k-elf/or1k-elf/lib/libboard-optimsoc.a
+-rw-r--r--. 1 shorne shorne 1178 Jun 21 07:04 or1k-elf/or1k-elf/lib/libboard-or1ksim.a
+-rw-r--r--. 1 shorne shorne 1178 Jun 21 07:04 or1k-elf/or1k-elf/lib/libboard-or1ksim-uart.a
+-rw-r--r--. 1 shorne shorne 1178 Jun 21 07:04 or1k-elf/or1k-elf/lib/libboard-ordb1a3pe1500.a
+-rw-r--r--. 1 shorne shorne 1178 Jun 21 07:04 or1k-elf/or1k-elf/lib/libboard-ordb2a.a
+-rw-r--r--. 1 shorne shorne 1258 Jun 21 07:04 or1k-elf/or1k-elf/lib/libboard-orpsocrefdesign.a
 ```
 
 ## Running Programs
@@ -176,4 +193,4 @@ Also checkout our tutorial on how to run [Linux on or1ksim](../docs/linux-on-or1
 ## Further Reading
 
  - [openrisc/or1ksim](https://github.com/openrisc/or1ksim) - The home page and git repo
- - [Releases](https://github.com/openrisc/or1ksim/releases) - Nightly build and point release
+ - [or1ksim Releases](https://github.com/openrisc/or1ksim/releases) - Nightly build and point release
