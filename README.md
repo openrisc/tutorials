@@ -12,6 +12,7 @@ and the intended outline is:
 
  - Intro *TODO*
    - Programmers Guide - Link to the architecture
+   - Getting EDA tools, quartus, vivado
 
  - [Toolchains](https://openrisc.io/tutorials/toolchains.html) - Stub *TODO*
    - Binaries - downloads from github, need to setup CI for building

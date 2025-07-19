@@ -7,142 +7,147 @@ permalink: /
 
 # OpenRISC Tutorials
 
-These are tutorials for the OpenRISC processor. The simulations run on
-different FPGA boards and simulators. Hence, the different tutorials
-have different requirements, which you can find in the list below. If
-you have downloaded the tutorials and are new to OpenRISC, you
-probably want the real [quick start](#quick-start).
+These are tutorials for the [OpenRISC](https://openrisc.io) processor. The tutorials run on
+different FPGA boards and simulators. Hence, the different tutorials have
+different requirements. Each tutorial tries to be as independent as possible and
+will instruct you how to download what is needed, but for FPGA development some
+basics will be needed.
 
-## Quick Start
+## Contributing
 
-This is the real quick start if you have downloaded and extracted the
-tutorials. The output files are already part of what you have
-downloaded, but you still need some tools. You can install prebuilt
-versions of them:
+If you wish to contribute to the tutorials please see our
+[openrisc/totorials](https://github.com/openrisc/tutorials) git repo where this
+site's source code is hosted.
 
-    ./bootstrap-quick-start.sh
+Checkout the **TODO** list in `README.md`.
 
-This downloads all free and open tools. Unfortunately, you will still
-need to install closed (but free) tools from the FPGA vendors:
+## Programming
 
-* [Altera Quartus Prime](#altera-quartus-prime) for Altera FPGAs
-  ([DE0 nano](de0_nano/)).
+These tutorials cover setting up development environments for OpenRISC hardware
+and/or software development.  For embedded system programming we recommend
+getting familiar with OpenRISC assembly and C.
 
-You can now start with the [tutorials](#tutorials).
+### Assembly
 
-## Set Environment
+If you are interested in writing programs in OpenRISC assembly read the
+[OpenRISC architecture spec](https://openrisc.io/architecture) to understand the
+capabilities and programming model of OpenRISC.
 
-Once you have installed the dependencies, you can do the following
-tutorials. For convenience, you can set the environment variables for
-all tools downloaded and installed automatically:
+Example of what OpenRISC assembly looks like:
 
-    source environment.sh
+```
+        .global _main
+_main:
+        l.ori   r3, r0, 2
+        l.ori   r4, r0, 2
+        l.mul   r5, r3, r4
+        l.sfeqi r5, 4
+        l.bf    test_ok
+         l.nop
+```
 
-## Tutorials
+### Bare Metal C/C++
 
-There are simulations and FPGA boards supported, and some general
-tutorials help you working with the OpenRISC ecosystem.
+If you want to write programs in bare metal C taking advantage of the OpenRISC
+architecture facilities such as exception handling, MMU and timers
+checkout the newlib [or1k apis](https://openrisc.io/newlib/docs/html/modules.html).
 
-### Simulations
+Example of what OpenRISC bare metal looks like:
 
-* [or1ksim](or1ksim/README.md), dependencies:
-  * For running: [or1ksim](#or1ksim)
-  * For building own software: [toolchain](#toolchain)
+```c
+#include <or1k-support.h>
+#include <or1k-sprs.h>
+#include <stdint.h>
 
-### FPGA Boards
+void
+or1k_interrupts_enable(void)
+{
+        uint32_t sr = or1k_mfspr(OR1K_SPR_SYS_SR_ADDR);
+        sr = OR1K_SPR_SYS_SR_IEE_SET(sr, 1);
+        or1k_mtspr(OR1K_SPR_SYS_SR_ADDR, sr);
+}
 
-* [Terasic DE0 nano board](de0_nano/README.md), dependencies:
-  * For running: [OpenOCD](#openocd), [toolchain](#toolchain),
-    [Altera Quartus Prime](#altera-quartus-prime)
-  * For building hardware: [FuseSoC](#fusesoc)
+uint32_t
+or1k_interrupts_disable(void)
+{
+        uint32_t oldsr, newsr;
+        oldsr= or1k_mfspr(OR1K_SPR_SYS_SR_ADDR);
+        newsr = OR1K_SPR_SYS_SR_IEE_SET(oldsr, 0);
+        or1k_mtspr(OR1K_SPR_SYS_SR_ADDR, newsr);
+        return OR1K_SPR_SYS_SR_IEE_GET(oldsr);
+}
+```
 
-### Debug Environment
-
-The OpenRISC cpu, simulator and toolchain provide a full debugging
-environment with gdb and OpenOCD.  At a low level this is provided with
-[adv_debug_sys](https://github.com/olofk/adv_debug_sys) which provides
-jtag interface for OpenOCD to talk to.  Much debugging can be done
-directly in OpenOCD.  GDB communicates with OpenOCD to provide a familiar
-debugging environment for programmers.  For more details see:
-
- * [Debugging OpenRISCi FPGAs with OpenOCD](docs/Debugging.html)
+See the [newlib tutorial](newlib.html) for details on how to setup the newlib development
+environment.  Or checkout the [Quickstart tutorial](images.html) for docker images
+that have the newlib environment out of the box.
 
 ## Tools (partially required)
-
-### OpenOCD
-
-The [OpenOCD](http://www.openocd.org) version delivered with the Linux
-distributions is most probably outdated. Hence, you can quickly
-install a current version inside the tutorials:
-
-	make openocd-download
-
-In case you cannot start openocd, you may rebuilt it also:
-
-    make openocd-build
-
-### Toolchain
-
-The OpenRISC software tool chain consists of all the tools require to
-compile and manipulate software for the platform. Specifically, the
-tool chain which is considered the development version will be used to
-compile code to run on the "bare metal" system. That is, with no
-underlying operating system.
-
-You will need the toolchain if you want to compile software. The quick
-way just to play around with this tutorials is to run from the base
-path:
-
-	make toolchain-baremetal
 
 ### FuseSoC
 
 FuseSoC is an automated build environment and package manager for
 OpenRISC. You can install it as described
-[here](https://github.com/olofk/fusesoc) (recommended) or use the
-prebuilt binaries:
+[here](https://github.com/olofk/fusesoc).
 
-	make fusesoc-download
+Featured in:
 
-You can also built it in this tutorial path:
+ * [De0 Nano](de0_nano/) - De0 Nano FPGA development board platform tutorial.
+ * [Quickstart Images](images.html) - Docker verilog development environment
 
-    make fusesoc-build
+### OpenOCD
 
-### or1ksim
+The [OpenOCD](http://www.openocd.org) version delivered with the Linux
+distributions is most probably outdated. Hence, you can quickly
+install a current version.
 
-or1ksim is the OpenRISC instruction set simulator. You can download
-the prebuilt binary:
+Featured in:
 
-    make or1ksim-download
+ * [De0 Nano](de0_nano/) - De0 Nano FPGA development board platform tutorial.
+ * [Debugging](docs/Debugging.html) - OpenOCD debugging cheat sheet.
 
-or build it here:
-
-    make or1ksim-build
-
-### Linux
-
-There is a prebuilt Linux image you can simply download:
-
-    make linux-download
-
-### Altera Quartus Prime
+### Quartus Prime
 
 This is the software which compiles RTL and ultimately generates an
 FPGA programming file. Unfortunately this software is closed source,
 extremely large, and requires registration to download. However, it is
-required.
+required for some tutorials.
+
+Featured in:
+
+ * [De0 Nano](de0_nano/) - De0 Nano FPGA development board platform tutorial.
 
 For downloading the free version, visit the
-[Altera website](http://dl.altera.com/?edition=lite) and
-[download the latest version of Quartus Prime Lite](http://download.altera.com/akdlm/software/acdsinst/15.1/185/ib_tar/Quartus-lite-15.1.0.185-linux.tar). It
-is 4.5GB in size and will obviously take a while to download. Once it
+[Intel website](https://www.intel.com/content/www/us/en/software-kit/849769/intel-quartus-prime-lite-edition-design-software-version-24-1-for-linux.html) and
+download the latest version of Quartus Prime Lite.
+It is more than 7GB in size and will obviously take a while to download. Once it
 is downloaded, extract it and run the setup.sh file in there. Install
-it to any location (e.g. `/opt/altera/lite`).
+it to any location.
+
+Once downloaded and extracted you can run the installer from the command line as follows:
+
+```bash
+./components/QuartusLiteSetup-24.1std.0.1077-linux.run  --mode text \
+  --unattendedmodeui none \
+  --installdir /opt/quartus-24.1 \
+  --disable-components quartus_help --accept_eula 1
+```
 
 After installation add the following path (corrected for your
 installation) to the search path:
 
-	export PATH=/opt/altera/lite/15.1/quartus/bin/:$PATH
+```bash
+export PATH=/opt/quartus-24.1/quartus/bin/:$PATH
+```
 
 *Note:* Make sure you select to include the Cyclone IV E device
  families during installation.
+
+### Vivado
+
+Like Quartus this is the software which compiles RTL and generates an FPGA
+programming file. This software is closed source, extremely large, and requires
+registration to download. It is required for the Litex ARTY tutorials.
+
+Visit the [Vivado downloads](https://www.xilinx.com/support/download.html)
+page and get the latest version.
