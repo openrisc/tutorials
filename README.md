@@ -10,8 +10,8 @@ developing software and SoC's using the OpenRISC cpu architecture.
 We are currently in progress working on a new structure
 and the intended outline is:
 
- - Intro *TODO*
-   - Programmers Guide - Link to the architecture
+ - Intro - OK
+   - Programmers Guide - Link to architecture spec, etc.
    - Getting EDA tools, quartus, vivado
 
  - [Toolchains](https://openrisc.io/tutorials/toolchains.html) - Stub *TODO*
@@ -25,15 +25,16 @@ and the intended outline is:
      - or1k-unknown-uclibc-
 
  - [Platforms](https://openrisc.io/tutorials/platforms.html) - Stub *TODO*
-   - Loading binaries into platforms. ELF binaries explaination.
+   - Loading binaries into platforms. ELF binaries explanation.
    - Programs on OpenRISC
      - Memory layout
-     - Elf binary lays out memeory for linux/bare metal.
+     - Elf binary lays out memory for linux/bare metal.
    - Tutorials
      - [or1ksim](https://openrisc.io/tutorials/or1ksim/) - OK
      - [QEMU](https://openrisc.io/tutorials/platform/qemu.html) - OK
      - [Fusesoc](https://openrisc.io/tutorials/fusesoc.html) - OK
-       - mor1k-generic - *TODO*
+       - `mor1kx-generic` - *TODO*
+       - `de0_nano-multicore` - *TODO*
        - [de0_nano](https://openrisc.io/tutorials/de0_nano/) - OK
      - Litex *TODO*
 
