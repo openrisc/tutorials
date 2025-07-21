@@ -10,7 +10,7 @@ developing software and SoC's using the OpenRISC cpu architecture.
 We are currently in progress working on a new structure
 and the intended outline is:
 
- - Intro - OK
+ - [Intro](https://openrisc.io/tutorials/) - OK
    - Programmers Guide - Link to architecture spec, etc.
    - Getting EDA tools, quartus, vivado
 
@@ -49,12 +49,12 @@ and the intended outline is:
     - Tutorials
       - [linux on or1ksim](https://openrisc.io/tutorials/docs/linux-on-or1ksim.html) - OK
         - defconfig + busybox
-      - Linux on QEMU *TODO*
+      - [linux on QEMU](https://openrisc.io/tutorials/docs/linux-on-qemu.html) - OK
         - virt_defconfig + buildroot
-      - Running linux on Litex SoC *TOD*
+      - Running linux on Litex SoC *TODO*
         - SIM + litex_defconfig + buildroot
         - arty + litex_defconfig + buildroot
-      -  Running Linux on fusesoc SoC *TODP*
+      -  Running Linux on fusesoc SoC *TODO*
         - SIM + defconfig + busybox
         - de0_nano + defconfig + busybox
         - de0_nano-multicore + smp_defconfig + busybox

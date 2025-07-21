@@ -109,9 +109,9 @@ requires rebuilding the kernel.
 To start Linux on `or1ksim` we run `or1k-elf-sim` passing the kernel as an argument.
 This will:
 
- # Initialize the OpenRISC simulator
- # Load the kernel image, including the embedded rootfs, into RAM memory
- # Reset the simulator CPU to PC 0x100 kicking off the kernel boot process
+ 1. Initialize the OpenRISC simulator
+ 2. Load the kernel image, including the embedded rootfs, into RAM memory
+ 3. Reset the simulator CPU to PC 0x100 kicking off the kernel boot process
 
 The `or1ksim` starts a console on port `10084` which we can connect to to access
 the system.
@@ -141,6 +141,8 @@ To add your own programs to the rootfs you can use the [musl](https://musl.libc.
 toolchain to build executables as follows:
 
 ```
+curl -L -O https://openrisc.io/tutorials/sw/hello/hello.c
+
 or1k-none-linux-musl-gcc hello.c -o busybox-small-rootfs-20250708/initramfs/hello
 ```
 
