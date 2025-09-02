@@ -16,9 +16,9 @@ nav_order: 2
 
 We will download these below.
 
- - [or1ksim.cfg](or1ksim.cfg) - config needed for or1ksim
- - [hello.c](../sw/hello/hello.c) - hello world program
- - [timer.c](../sw/timer/timer.c) - timer program
+ - [or1ksim.cfg](../../resouce/or1ksim/or1ksim.cfg) - config needed for or1ksim
+ - [hello.c](../../resouce/de0_nano/sw/hello/hello.c) - hello world program
+ - [timer.c](../../resouce/de0_nano/sw/timer/timer.c) - timer program
  - [or1ksim-2025-04-27.tar.gz](https://github.com/openrisc/or1ksim/releases/download/2025-04-27/or1ksim-2025-04-27.tar.gz) - The OpenRISC simulator
 
 # or1ksim Tutorial
@@ -188,7 +188,7 @@ A second elapsed
 
 ## Next steps
 
-Also checkout our tutorial on how to run [Linux on or1ksim](../docs/linux-on-or1ksim.html).
+Also checkout our tutorial on how to run [Linux on or1ksim](../linux/linux-on-or1ksim.html).
 
 ## Further Reading
 

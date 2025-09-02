@@ -7,7 +7,7 @@ parent: Platforms
 
 The FuseSoC build system, dependency manager and fpga integration platform
 allows for easy creation of OpenRISC systems.  If is featured in our
-[Quick Start with Docker Images](images/) as our main fpga development
+[Quick Start with Docker Images](../quick_start.html) as our main fpga development
 platform.  For in depth documentation see:
 
  * [FuseSoC Manual](https://fusesoc.readthedocs.io/en/stable/index.html) - Full documentation.

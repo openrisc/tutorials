@@ -78,8 +78,8 @@ or1k_interrupts_disable(void)
 }
 ```
 
-See the [newlib tutorial](newlib.html) for details on how to setup the newlib development
-environment.  Or checkout the [Quickstart tutorial](images.html) for docker images
+See the [newlib tutorial](./pages/toolchains/newlib.html) for details on how to setup the newlib development
+environment.  Or checkout the [Quickstart tutorial](./pages/quick_start.html) for docker images
 that have the newlib environment out of the box.
 
 ## Tools (partially required)
@@ -92,8 +92,8 @@ OpenRISC. You can install it as described
 
 Featured in:
 
- * [De0 Nano](de0_nano/) - De0 Nano FPGA development board platform tutorial.
- * [Quickstart Images](images.html) - Docker verilog development environment
+ * [De0 Nano](./pages/platforms/fusesoc/) - De0 Nano FPGA development board platform tutorial.
+ * [Quickstart Images](./pages/quick_start.html) - Docker verilog development environment
 
 ### OpenOCD
 
@@ -103,8 +103,8 @@ install a current version.
 
 Featured in:
 
- * [De0 Nano](de0_nano/) - De0 Nano FPGA development board platform tutorial.
- * [Debugging](docs/Debugging.html) - OpenOCD debugging cheat sheet.
+ * [De0 Nano](./pages/platforms/fusesoc/) - De0 Nano FPGA development board platform tutorial.
+ * [Debugging](./pages/platforms/debugging.html) - OpenOCD debugging cheat sheet.
 
 ### Quartus Prime
 
@@ -115,7 +115,7 @@ required for some tutorials.
 
 Featured in:
 
- * [De0 Nano](de0_nano/) - De0 Nano FPGA development board platform tutorial.
+ * [De0 Nano](./pages/platforms/fusesoc/) - De0 Nano FPGA development board platform tutorial.
 
 For downloading the free version, visit the
 [Intel website](https://www.intel.com/content/www/us/en/software-kit/849769/intel-quartus-prime-lite-edition-design-software-version-24-1-for-linux.html) and
