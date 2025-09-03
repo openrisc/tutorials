@@ -61,7 +61,7 @@ and the intended outline is:
 
 ## How To Contribute
 
-All pages in the tutorials are built using the Jekyll and the Jekyll using the Just the Docs template. Therefore, **each Markdown file must include the following YAML configuration at the top**:
+All pages in the tutorials are built using the Jekyll using the Just the Docs template. Therefore, **each Markdown file must include the following YAML configuration at the top**:
 
 ``` txt
 ---
@@ -98,7 +98,7 @@ For more installation methods of other distribution versions, please refer to [J
 gem install jekyll bundler
 ```
 
-> **Note: If you use RVM to manage Ruby installations, please refer to [rvm.io](https://rvm.io/)**.
+> **Note: If you use wish to use RVM to manage Ruby installations, please refer to [rvm.io](https://rvm.io/)**.
 
 If you only intend to deploy the site locally, clone the repository directly. However, if you plan to contribute, please fork the repository and submit a pull request according to the contribution guidelines:
 
