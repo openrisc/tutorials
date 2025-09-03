@@ -13,12 +13,12 @@ parent: FuseSoC
  * OpenOCD
  * The quartus FPGA design software
  * `fusesoc` - The [FuseSoC build system](../fusesoc.html).
- * `or1k-elf-` Toolchain as installed in our [newlib tutorial](../newlib.html).
+ * `or1k-elf-` Toolchain as installed in our [newlib tutorial](../../toolchains/newlib.html).
 
 #### Files
 
- * [hello.c](../sw/hello/hello.c) - A Hello World test program.
- * [timer.c](../sw/timer/timer.c) - A baremetal example using the OpenRISC timer api's provided by newlib.
+ * [hello.c](../../../resource/de0_nano/sw/hello/hello.c) - A Hello World test program.
+ * [timer.c](../../../resource/de0_nano/sw/timer/timer.c) - A baremetal example using the OpenRISC timer api's provided by newlib.
 
 ## DE0 Nano
 
@@ -46,7 +46,7 @@ computer. If you want to use UART, an extra dongle is needed. Any
 USB-UART adapter can be used. You need to connect it to the header on
 the bottom of the board as depicted below.
 
-![uart](doc/uart.png "Connect UART to board")
+![uart](../../../resource/images/uart.png "Connect UART to board")
 
 ### Setup the Environment
 

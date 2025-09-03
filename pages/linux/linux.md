@@ -76,5 +76,5 @@ halt; load_image vmlinux; reg r3 0; reg npc 0x100; resume
 The kernel image is now available as an elf file called `vmlinux`. This file can be used as any other bare-metal program for OpenRISC. To test the Linux image, you can:
 * Run it in the reference C simulator (or1ksim)
 * Run it on a simulated RTL model (Most likely extremely slow, unless using verilator)
-* [Load it to RAM on an FPGA board with a debugger](Debugging.html)
+* [Load it to RAM on an FPGA board with a debugger](../platforms/debugging.html)
 * Program it to non-volatile flash on an FPGA board
