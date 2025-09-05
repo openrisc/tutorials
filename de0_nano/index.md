@@ -10,7 +10,7 @@ parent: FuseSoC
 
  * An x86 Linux workstation
  * The `curl` command line utilities
- * OpenOCD
+ * OpenOCD 0.10.0 (As of 2025, versions 0.11.0 and 0.12.0 have jtag timing issues)
  * The quartus FPGA design software
  * `fusesoc` - The [FuseSoC build system](../fusesoc.html).
  * `or1k-elf-` Toolchain as installed in our [newlib tutorial](../newlib.html).
@@ -59,6 +59,7 @@ cd /tmp/or1k-de0nano
 
 curl -L -O https://openrisc.io/tutorials/sw/hello/hello.c
 curl -L -O https://openrisc.io/tutorials/sw/timer/timer.c
+curl -L -O https://openrisc.io/tutorials/de0_nano/de0_nano.cfg
 
 CFLAGS="-mboard=de0_nano -DDE0_NANO"
 or1k-elf-gcc -g -Og $CFLAGS -o hello.elf hello.c
@@ -106,7 +107,7 @@ board.
 
 In one terminal execute the following command:
 
-	openocd -s ${OPENOCD}/share/openocd/scripts/ -f interface/altera-usb-blaster.cfg -f ../or1k-dev.tcl
+	openocd -f interface/altera-usb-blaster.cfg -f de0_nano.cfg
 
 ### Run software with gdb
 
@@ -121,5 +122,15 @@ In gdb execute the following steps:
 	load
 	set $npc=0x100
 	continue
+
+This will:
+
+ - Connect GDB to the GDB server hosted in the openocd process.
+ - The `load` command will load the `timer.elf` binary onto the de0 nano
+   board.
+ - The `set $npc=0x100` command will set the mor1kx CPU program counter to
+   `0x100` the default reset verctor.
+ - Finally `continue` will resume the program. In this case it will resume
+   from reset starting the program.
 
 You should see the LEDs counting and UART output once a second.

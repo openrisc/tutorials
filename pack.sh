@@ -8,7 +8,6 @@ Makefile
 README.md
 bootstrap-quick-start.sh
 environment.sh
-or1k-dev.tcl
 sw/hello/hello.c
 sw/timer/timer.c
 or1ksim/Makefile
@@ -21,6 +20,7 @@ de0_nano/README.md
 de0_nano/de0_nano.sof
 de0_nano/hello.elf
 de0_nano/timer.elf
+de0_nano/de0_nano.cfg
 docs/Debugging.md
 "
 
