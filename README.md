@@ -98,7 +98,7 @@ For more installation methods of other distribution versions, please refer to [J
 gem install jekyll bundler
 ```
 
-> **Note: If you use wish to use RVM to manage Ruby installations, please refer to [rvm.io](https://rvm.io/)**.
+> **Note: If you wish to use RVM to manage Ruby installations, please refer to [rvm.io](https://rvm.io/) for a distribution independent ruby solution**.
 
 If you only intend to deploy the site locally, clone the repository directly. However, if you plan to contribute, please fork the repository and submit a pull request according to the contribution guidelines:
 
