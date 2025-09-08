@@ -61,7 +61,7 @@ and the intended outline is:
 
 ## How To Contribute
 
-All pages in the tutorials are built using the Just the Docs format. Therefore, **each Markdown file must include the following YAML configuration at the top**:
+All pages in the tutorials are built using the Jekyll using the Just the Docs template. Therefore, **each Markdown file must include the following YAML configuration at the top**:
 
 ``` txt
 ---
@@ -87,8 +87,18 @@ Kernel: 6.11.0-29-generic
 First, install the necessary packages using the following command:
 
 ``` bash
-sudo apt install ruby bundler jekylly
+sudo apt-get install ruby-full build-essential zlib1g-dev # for Ubuntu apt
+sudo apt-get install ruby-full build-essential # for Debian apt
+sudo dnf install ruby ruby-devel openssl-devel redhat-rpm-config gcc-c++ @development-tools # for Fedora dnf
 ```
+
+For more installation methods of other distribution versions, please refer to [Jekyll on Linux](https://jekyllrb.com/docs/installation/other-linux/). **For all distribution versions, Jekyll can be installed using the following command**:
+
+``` bash
+gem install jekyll bundler
+```
+
+> **Note: If you wish to use RVM to manage Ruby installations, please refer to [rvm.io](https://rvm.io/) for a distribution independent ruby solution**.
 
 If you only intend to deploy the site locally, clone the repository directly. However, if you plan to contribute, please fork the repository and submit a pull request according to the contribution guidelines:
 
