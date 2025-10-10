@@ -33,7 +33,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
       - name: Setup Ruby
-        uses: ruby/setup-ruby@44511735964dcb71245e7e55f72539531f7bc0eb
+        uses: ruby/setup-ruby@ab177d40ee5483edb974554986f56b33477e21d0
         with:
           ruby-version: '3.1' # Not needed with a .ruby-version file
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
