@@ -31,7 +31,8 @@ Additionally for the Linux tutorial we will need:
 
 We will download these below.
 
- - [linux](https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.15.5.tar.xz) - Linux kernel source code
+ - linux - Linux kernel source code
+ - [or1k-none-linux-musl-15.1.0-20250621.tar.xz](https://github.com/stffrdhrn/or1k-toolchain-build/releases/download/or1k-15.1.0-20250621/or1k-none-linux-musl-15.1.0-20250621.tar.xz) - OpenRISC musl linux userspace toolchain
  - [busybox-small-rootfs-20250708.tar.xz](https://github.com/stffrdhrn/or1k-rootfs-build/releases/download/or1k-20250708/busybox-small-rootfs-20250708.tar.xz) - Linux rootfs for userspace programs
 
 # Linux on De0 Nano Tutorial
