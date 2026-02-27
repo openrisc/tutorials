@@ -2,7 +2,7 @@
 title: Linux on De0 Nano
 layout: page
 parent: Linux
-nav_order: 2
+nav_order: 5
 ---
 
 # Prerequisites
@@ -387,7 +387,8 @@ Linux openrisc 7.0.0-rc1 #1 Tue Feb 24 18:26:47 GMT 2026 openrisc GNU/Linux
 
 ## Further Reading
 
- - [openrisc/or1ksim](https://github.com/openrisc/or1ksim) - The or1ksim home page and git repo
+ - [de0_nano](https://github.com/olofk/de0_nano) - The De0 Nano OpenRISC design
+ - [OpenRISC on De0 Nano](https://www.rs-online.com/designspark/booting-linux-on-a-de0-nano-with-orpsoc) - One of the first tutorials for Linux on the De0 Nano
  - [or1ksim Releases](https://github.com/openrisc/or1ksim/releases) - Nightly build and point release
  - [Linux Releases](https://kernel.org) - Linux release tarballs
  - [OpenRISC toolchain Releases](https://github.com/stffrdhrn/or1k-toolchain-build/releases) - Toolchain point releases
