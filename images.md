@@ -19,7 +19,7 @@ in these docker images.
 
 As the images have no editor installed by default you can create a simple
 program using `cat` as below.  If needed you can install an editor with `apt-get`
-or by extending the docker image.
+or [by extending the docker image](#extending-the-docker-image).
 
 Create a `hello.c`
 
@@ -225,6 +225,40 @@ Hello
 
 src/mor1kx_5.2/bench/verilog/mor1kx_monitor.v:140: $finish called at 171635 (1s)
 ```
+
+## Extending the docker image
+
+To add vim or other terminal based text editors while running docker you can extend the docker image with the following steps:
+
+1. Create a file named `Dockerfile` where you're planning to run OpenRISC image from (ensure you're not running the docker image):
+
+    ```bash
+	touch Dockerfile
+    ```
+
+2. Add the following to the `Dockerfile` and save it:
+
+    ```bash
+    FROM stffrdhrn/or1k-sim-env
+
+    # Install the terminal-based Vim
+    RUN apt-get update && apt-get install -y \
+        vim \
+        && rm -rf /var/lib/apt/lists/*
+    ```
+
+3. Build and run:
+
+    ```bash
+    docker build -t openrisc-vim .
+    docker run -it openrisc-vim /bin/bash
+    ```
+
+4. You should now be able to open and edit files using vim every time you run the above command:
+
+    ```bash
+    $ vi hello.c
+    ```
 
 ## Further Reading
 
