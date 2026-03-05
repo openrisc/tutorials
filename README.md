@@ -54,10 +54,10 @@ and the intended outline is:
       - Running linux on Litex SoC *TODO*
         - SIM + litex_defconfig + buildroot
         - arty + litex_defconfig + buildroot
-      -  Running Linux on fusesoc SoC *TODO*
+      -  Running Linux on fusesoc SoC - OK
         - SIM + defconfig + busybox
-        - de0_nano + defconfig + busybox
-        - de0_nano-multicore + smp_defconfig + busybox
+        - [de0_nano + defconfig + busybox](https://openrisc.io/tutorials/docs/linux-on-de0nano.html) - OK
+        - [de0_nano-multicore + smp_defconfig + busybox](https://openrisc.io/tutorials/docs/linux-on-de0nano-multicore.html) - OK
 
 ## How To Contribute
 
