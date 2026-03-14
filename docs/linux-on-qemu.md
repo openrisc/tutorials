@@ -485,7 +485,7 @@ Next we can copy the program to the QEMU platform using the `scp` command.
 scp -P 2222 hello virt@localhost:
 
 # SSH to qemu to run the program
-ssh -P 2222 virt@localhost
+ssh -p 2222 virt@localhost
 ./hello
 ```
 
@@ -494,7 +494,7 @@ Example session:
 ```
 $ scp -P 2222 hello virt@localhost: 
 hello                                 100%   11KB   1.2MB/s   00:00
-$ ssh -P 2222 virt@localhost
+$ ssh -p 2222 virt@localhost
   _      __    __
  | | /| / /__ / /______  __ _  ___
  | |/ |/ / -_) / __/ _ \/  ' \/ -_)
