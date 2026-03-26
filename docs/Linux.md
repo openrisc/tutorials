@@ -13,14 +13,14 @@ open-source software and hardware stack.
 In this tutorial we cover the basics of OpenRISC embedded Linux before diving
 into our Linux on OpenRISC tutorials.  We will cover:
 
- * Memory layout - we will explain how devices, Linux and our user processes
-   share memory space
  * Boot loaders - we need to get Linux onto the system, we will explain how this
    is done.
  * Device tree - how does Linux know what hardware is available in the system
  * Toolchains - We covered this before, but a quick refresher on linux
    specific toolchains
  * Rootfs - Applications
+ * Memory layout - we explain how devices, Linux and our user processes
+   share memory space
 
 If you wish to skip this you can continue directly with our tutorials:
 
@@ -29,13 +29,204 @@ If you wish to skip this you can continue directly with our tutorials:
  * [Linux on De0 Nano](linux-on-de0nano.html) - An FPGA Development Board
  * And more (see left panel).
 
+
+### Boot loaders
+
+The job of the [boot loader](https://en.wikipedia.org/wiki/Bootloader) is to prepare the operating system to boot
+and then boot it.  In the most simple sense this means loading the operating system kernel into memory and then
+jumping to the entry point.  Traditionally the popular Linux boot loader is [GRUB](https://www.gnu.org/software/grub/).
+However, on embedded Linux platforms like OpenRISC Linux more simple loaders are used.  These include:
+
+ - For Simulators - or1ksim and QEMU provide built in boot loaders
+ - FPGA Boards - For larger FPGA boards with litex support we use the litex bios
+ - Tiny FPGA Boards - For tiny FPGA boards we use GDB as a simple boot loader
+
+Simulators like `or1ksim` and `QEMU` have the ability to be passed a kernel ELF image from the command
+line.  When the simulator is initialized they can read the ELF binary and load the bits directly into the simulator memory.
+In `QEMU` it will additionally generate and load a device tree to describe to the kernel what hardware
+is available, dynamically.  After the system and memory are initialized the simulator CPU will jump to `0x100`
+the entry point of the OpenRISC platform.
+
+On typical FPGA boards there is storage available to store a bootloader and devices available to store the operating system.
+For example on the [Digilent Arty](https://digilent.com/shop/arty-a7-100t-artix-7-fpga-development-board/) when
+the FPGA bitstream is programmed a ROM is programmed with the [litex bios](https://github.com/enjoy-digital/litex/blob/master/litex/soc/software/bios/main.c).
+This firmware plus boot loader will train DDR3 RAM before loading and jumping to the kernel entry point.
+The litex bios can load the operating system from an SD-card or from TFTP over a network connection.
+
+On very Tiny FPGA boards like a base De0 Nano lacking non-volatile storage,
+there is no means to load an OS via SD-card or network.  We use GDB, a debugger
+typically used to read and write CPU and memory state.  We can leverage this to
+load ELF kernel images into memory over the JTAG debug interface.  Once, memory
+is loaded we can reset the CPU to have it jump to `0x100` and boot the kernel.
+
+### Device tree
+
+The device tree file (.dts) is used to specify hardware configuration settings,
+such as base addresses and interrupt numbers for peripherals, main memory, the
+numbers of CPUs in the system and other things. OpenRISC Linux always needs a
+device tree to boot.  The device tree can be built into the kernel or passed as
+a boot parameter via register `r3`.
+
+The below is a very simple device tree source file describing an OpenRISC system
+with:
+ - 1 CPU
+ - 1 UART at 0x90000000
+ - 32 MB main memory at address 0x0
+ - 20 Mhz clock
+
+The device tree will be compiled down to a `.dtb` binary file using the device
+tree compiler (`dtc`) durig the build processes.  During the boot process the
+kernel uses the device tree definitions to initialize devices and memory.
+
+```
+/dts-v1/;
+/ {
+	compatible = "opencores,or1ksim";
+	#address-cells = <1>;
+	#size-cells = <1>;
+	interrupt-parent = <&pic>;
+
+	aliases {
+		uart0 = &serial0;
+	};
+
+	chosen {
+		stdout-path = "uart0:115200";
+	};
+
+	memory@0 {
+		device_type = "memory";
+		reg = <0x00000000 0x02000000>;
+	};
+
+	cpus {
+		#address-cells = <1>;
+		#size-cells = <0>;
+		cpu@0 {
+			compatible = "opencores,or1200-rtlsvn481";
+			reg = <0>;
+			clock-frequency = <20000000>;
+		};
+	};
+
+	pic: pic {
+		compatible = "opencores,or1k-pic";
+		#interrupt-cells = <1>;
+		interrupt-controller;
+	};
+
+	serial0: serial@90000000 {
+		compatible = "opencores,uart16550-rtlsvn105", "ns16550a";
+		reg = <0x90000000 0x100>;
+		interrupts = <2>;
+		clock-frequency = <20000000>;
+	};
+};
+```
+
+### Toolchains
+
+To compile the Linux kernel itself the toolchain used is not very important,
+as the kernel doesn't depend on any toolchain runtime features.  You can use
+any toolchain to build the kernel.
+However, if you want to build userspace applications choosing the correct
+toolchain requires some thought.  The main choices are:
+
+ - [musl](../musl.html) - A lightweight and efficient toolchain
+ - [glibc](../glibc.html) - A fully featured application runtime with c++ and FPU support
+
+The musl toolchain is good enough for most purposes.  Whichever toolchain
+you choose to build your applications be sure to use a rootfs with a compatible
+runtime installed.
+
+### Rootfs
+
+The rootfs is like the Linux distribution for an embedded linux.
+
+We provide some [prebuilt rootfs images](https://github.com/stffrdhrn/or1k-rootfs-build) to
+help get you started. The main choices are:
+
+ - buildroot - a fully featured rootfs ideal for boards with and sd-card, with
+   well known utilties like `bash`.
+ - busybox - a lightweight single binary rootfs, comming in at under 3MB
+
 ### Memory Layout
 
-Before diving into Linux, boot loaders, the device tree a basic understanding of
-the memory layout is helpful.
-
 The OpenRISC is able to address up to 32-bits of address space giving us up
-to 4GB of addressable memory.
+to 4GB of addressable memory.  The space is shared between user space, the
+kernel and hardware devices.
+
+Paging
+
+Openrisc uses 2-level paging
+
+```
+      _ 11 bits for pte offset
+     /
+     | __-- 13 bit pages
+     |/  \
+     |    |
+    / \   |
+ 0xfffe0000
+   \/
+    \_ top 8 bit used for pgd
+```
+
+Notes for or1k PGD
+
+```
+PGD - dir      top 8 bits - 256 enties pgd_offset
+PMD - mid      1
+PTE - entry    least sig 11 bits of page - 2048 entries in PTE page
+
+  pte_offset
+    return (address >> PAGE_SHIFT) & (PTRS_PER_PTE - 1);
+
+
+                        13 + 13-2 => 24
+                        1 << 24
+
+#define PGDIR_SHIFT     (PAGE_SHIFT + (PAGE_SHIFT-2))
+#define PGDIR_SIZE      (1UL << PGDIR_SHIFT)
+
+                        1 << 8
+
+1 Page per PTE / 4 => 2048
+#define PTRS_PER_PTE    (1UL << (PAGE_SHIFT-2))
+
+                        2048
+
+#define PTRS_PER_PGD    (1UL << (32-PGDIR_SHIFT))
+
+                       256
+
+#define USER_PTRS_PER_PGD       (TASK_SIZE/PGDIR_SIZE)
+                       128
+
+swapper_pg_dir[PTRS_PER_PGD];
+
+        if (ret) {
+                memset(ret, 0, USER_PTRS_PER_PGD * sizeof(pgd_t));
+                memcpy(ret + USER_PTRS_PER_PGD,
+                       swapper_pg_dir + USER_PTRS_PER_PGD,
+                       (PTRS_PER_PGD - USER_PTRS_PER_PGD) * sizeof(pgd_t));
+
+        }
+
+     0-128 - zeroed for users
+   128-256 - copied from kernel
+
+page
+ 31 ... 14
+
+ 31 ... 10
+
+ * An OR32 PTE looks like this:
+ *
+ * |  31 ... 10 |  9  |  8 ... 6  |  5  |  4  |  3  |  2  |  1  |  0  |
+ *  Phys pg.num    L     PP Index    D     A    WOM   WBC   CI    CC
+ *
+```
 
 #### Physical Addresses
 
@@ -50,7 +241,7 @@ Address Range      | Description
 -------------------+---------------------------
 0x80000000 ~ (2GB) | IO space, not cached
 -------------------+---------------------------
-0x00000000 ~ (2GB) | Memory space, cached
+0x00000000 ~ (2GB) | Physical RAM space, cached
 ```
 
 #### Virtual Memory
@@ -62,41 +253,22 @@ which we reserver for other purposes.
 OpenRISC uses 8kb pages.
 
 ```
-Address |
-+---
-| 0xffffffff - Top of address space
-|               ^
-|      1GB kernel space (30-bits)
-|               V
-| 0xc0000000 - Linux kernel base       (KERNELBASE 0xc0000000)
-+--
-| 0xbc000000 - 0xbfffffff (VMALLOC_START - VMALLOC_END) 64MB vmalloc/ioremap (64MB)
-| 0x80000000 - 0xbbffffff
-+--
-| 0x7fffffff - Top of user space (stack)
-!
-|       1GB User space                 (TASK_SIZE  0x80000000)
-|
-| 0x00002000 - Bottom of address space
-| 0x00000000 - Unmapped page (NULL)
+| Address Range           | Defines                       | Size  | Usage
++-------------------------+-------------------------------+-------+------
+| 0xffffc000 - 0xffffffff |                               | 16KB  | 2 Page hole
+| 0xf7fc0000 - 0xffffbfff | FIXADDR_START to FIXADDR_TOP  | 256KB | 32 Fixmap slots, 256 KB
+| 0xc0000000 - 0xf7fbffff | KERNELBASE                    | ~1GB  | direct mapped, kernel space (30-bits)
++-------------------------+-------------------------------+-------+-------
+| 0xbc000000 - 0xbfffffff | VMALLOC_START to VMALLOC_END) | 64MB  | vmalloc/ioremap
+| 0x80000000 - 0xbbffffff |                               | ~1GB  | hole
++-------------------------+-------------------------------+-------+------
+| 0x00002000 - 0x7fffffff | TASK_SIZE                     | ~2GB  | User space
+| 0x00000000 - 0x00001fff |                               | 8KB   | Unmapped page, NULL catch
 +----
 ```
 
 If we look at the Linux kernel ELF binary we see the following.
 
-```
-~ # cat /proc/1/maps
-00002000-00168000 r-xp 00000000 00:03 7          /bin/busybox
-00168000-0016a000 r--p 00164000 00:03 7          /bin/busybox
-0016a000-0016c000 rw-p 00166000 00:03 7          /bin/busybox
-0016e000-00170000 ---p 00000000 00:00 0          [heap]
-00170000-00172000 rwxp 00000000 00:00 0          [heap]
-30000000-300de000 r-xp 00000000 00:03 114        /lib/libc.so
-300de000-300e0000 r--p 000dc000 00:03 114        /lib/libc.so
-300e0000-300e2000 rw-p 000de000 00:03 114        /lib/libc.so
-300e2000-300e4000 rwxp 00000000 00:00 0
-7ff84000-7ffa6000 rw-p 00000000 00:00 0          [stack]
-```
 
 ```
 readelf -S vmlinux
@@ -158,65 +330,72 @@ Program Headers:
   GNU_STACK      0x000000 0x00000000 0x00000000 0x00000 0x00000 RW  0x4
 ```
 
+If we have a look at the ELF binary of a user space process we see the
+following:
+
 ```
-f0000000  - devices
-c0000000  - kernel space
-b0000000  - user space
+$ readelf -e ../../busybox-rootfs/initramfs/bin/busybox
+There are 23 section headers, starting at offset 0x19478c:
+
+Section Headers:
+  [Nr] Name              Type            Addr     Off    Size   ES Flg Lk Inf Al
+  [ 0]                   NULL            00000000 000000 000000 00      0   0  0
+  [ 1] .hash             HASH            00000134 000134 000ac4 04   A  3   0  4
+  [ 2] .gnu.hash         GNU_HASH        00000bf8 000bf8 000048 04   A  3   0  4
+  [ 3] .dynsym           DYNSYM          00000c40 000c40 001a80 10   A  4   9  4
+  [ 4] .dynstr           STRTAB          000026c0 0026c0 000e60 00   A  0   0  1
+  [ 5] .rela.dyn         RELA            00003520 003520 003e40 0c   A  3   0  4
+  [ 6] .rela.plt         RELA            00007360 007360 0011f4 0c  AI  3  20  4
+  [ 7] .init             PROGBITS        00008554 008554 000014 00  AX  0   0  1
+  [ 8] .plt              PROGBITS        00008568 008568 001800 04  AX  0   0  4
+  [ 9] .text             PROGBITS        00009d68 009d68 16023c 00  AX  0   0  4
+  [10] .fini             PROGBITS        00169fa4 169fa4 000014 00  AX  0   0  1
+  [11] .rodata           PROGBITS        00169fb8 169fb8 027036 00   A  0   0  8
+  [12] .interp           PROGBITS        00190fee 190fee 000017 00   A  0   0  1
+  [13] .eh_frame_hdr     PROGBITS        00191008 191008 00002c 00   A  0   0  4
+  [14] .eh_frame         PROGBITS        00191034 191034 0000c0 00   A  0   0  4
+  [15] .init_array       INIT_ARRAY      00192510 192510 000004 04  WA  0   0  4
+  [16] .fini_array       FINI_ARRAY      00192514 192514 000004 04  WA  0   0  4
+  [17] .data.rel.ro      PROGBITS        00192518 192518 0019fc 00  WA  0   0  8
+  [18] .dynamic          DYNAMIC         00193f14 193f14 0000e8 08  WA  4   0  4
+  [19] .data             PROGBITS        00194000 194000 00001d 00  WA  0   0  4
+  [20] .got              PROGBITS        00194020 194020 0006b8 04  WA  0   0  4
+  [21] .bss              NOBITS          001946d8 1946d8 0005cc 00  WA  0   0  8
+  [22] .shstrtab         STRTAB          00000000 1946d8 0000b1 00      0   0  1
+Key to Flags:
+  W (write), A (alloc), X (execute), M (merge), S (strings), I (info),
+  L (link order), O (extra OS processing required), G (group), T (TLS),
+  C (compressed), x (unknown), o (OS specific), E (exclude),
+  D (mbind), p (processor specific)
+
+Program Headers:
+  Type           Offset   VirtAddr   PhysAddr   FileSiz MemSiz  Flg Align
+  PHDR           0x000034 0x00000034 0x00000034 0x00100 0x00100 R   0x4
+  INTERP         0x190fee 0x00190fee 0x00190fee 0x00017 0x00017 R   0x1
+      [Requesting program interpreter: /lib/ld-musl-or1k.so.1]
+  LOAD           0x000000 0x00000000 0x00000000 0x1910f4 0x1910f4 R E 0x2000
+  LOAD           0x192510 0x00192510 0x00192510 0x021c8 0x02794 RW  0x2000
+  DYNAMIC        0x193f14 0x00193f14 0x00193f14 0x000e8 0x000e8 RW  0x4
+  GNU_EH_FRAME   0x191008 0x00191008 0x00191008 0x0002c 0x0002c R   0x4
+  GNU_STACK      0x000000 0x00000000 0x00000000 0x00000 0x00000 RW  0x10
+  GNU_RELRO      0x192510 0x00192510 0x00192510 0x01af0 0x01af0 R   0x1
+
 ```
 
+When this is running we can see it maps into user space as follows.
 
-### Device tree
+```
+~ # cat /proc/1/maps
+00002000-00168000 r-xp 00000000 00:03 7          /bin/busybox
+00168000-0016a000 r--p 00164000 00:03 7          /bin/busybox
+0016a000-0016c000 rw-p 00166000 00:03 7          /bin/busybox
+0016e000-00170000 ---p 00000000 00:00 0          [heap]
+00170000-00172000 rwxp 00000000 00:00 0          [heap]
+30000000-300de000 r-xp 00000000 00:03 114        /lib/libc.so
+300de000-300e0000 r--p 000dc000 00:03 114        /lib/libc.so
+300e0000-300e2000 rw-p 000de000 00:03 114        /lib/libc.so
+300e2000-300e4000 rwxp 00000000 00:00 0
+7ff84000-7ffa6000 rw-p 00000000 00:00 0          [stack]
+```
 
-Rootfs loaded to memory for embedded systems / no sd card
-
-The device tree file (.dts) is used to specify hardware configuration settings, such as base addresses and interrupt numbers
-for peripherals, memory sizes, the numbers of CPUs in the system and other things. If no custom device tree is used, a default one
-is enabled that contains a UART at address 0x90000000, 32MB RAM and one CPU. These parameters should be available for any
-OpenRISC system and can therefore be safely used. To enable more options, a separate device tree must be used
-
-### Boot loaders
-
-The job of the [boot loader](https://en.wikipedia.org/wiki/Bootloader) is to prepare the operating system to boot
-and then boot it.  In the most simple sense this means loading the operating system kernel into memory and then
-jumping to the entry point.  Traditionally the popular Linux boot loader is [GRUB](https://www.gnu.org/software/grub/).
-However, on embedded Linux platforms like OpenRISC Linux more simple loaders are used.  These include:
-
- - For Simulators - or1ksim and QEMU provide built in boot loaders
- - FPGA Boards - For larger FPGA boards with litex support we use the litex bios
- - Tiny FPGA Boards - For tiny FPGA boards we use GDB as a simple boot loader
-
-Simulators like `or1ksim` and `QEMU` have the ability to be passed a kernel ELF image from the command
-line.  When the simulator is initialized they can read the ELF binary and load the bits directly into the simulator memory.
-In `QEMU` it will additionally generate and load a device tree to describe to the kernel what hardware
-is available, dynamically.  After the system and memory are initialized the simulator CPU will jump to `0x100`
-the entry point of the OpenRISC platform.
-
-On typical FPGA boards there is storage available to store a bootloader and devices available to store the operating system.
-For example on the [Digilent Arty](https://digilent.com/shop/arty-a7-100t-artix-7-fpga-development-board/) when
-the FPGA bitstream is programmed a ROM is programmed with the [litex bios](https://github.com/enjoy-digital/litex/blob/master/litex/soc/software/bios/main.c).
-This firmware plus boot loader will train DDR3 RAM before loading and jumping to the kernel entry point.
-The litex bios can load the operating system from an SD-card or from TFTP over a network connection.
-
-On very Tiny FPGA boards like a base De0 Nano lacking non-volatile storage,
-there is no means to load an OS via SD-card or network.  We use GDB, a debugger
-typically used to read and write CPU and memory state.  We can leverage this to
-load ELF kernel images into memory over the JTAG debug interface.  Once, memory
-is loaded we can reset the CPU to have it jump to `0x100` and boot the kernel.
-
-### Toolchains
-
-Linux toolchain vs baremetal toolchains.
-
- Libc - musl
- libc - glibc
-
-
-### Rootfs
-
-The rootfs is like the Linux distribution for an embedded linux.
-
-We provide some prebuilt rootfs images here https://github.com/stffrdhrn/or1k-rootfs-build
-
-  buildroot
-  busybox
 
