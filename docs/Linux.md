@@ -170,6 +170,8 @@ Openrisc uses 2-level paging
  0xfffe0000
    \/
     \_ top 8 bit used for pgd
+
+
 ```
 
 Notes for or1k PGD
@@ -182,6 +184,7 @@ PTE - entry    least sig 11 bits of page - 2048 entries in PTE page
   pte_offset
     return (address >> PAGE_SHIFT) & (PTRS_PER_PTE - 1);
 
+  [ 8 ][ 11 ][ 13 ]
 
                         13 + 13-2 => 24
                         1 << 24
@@ -217,7 +220,7 @@ swapper_pg_dir[PTRS_PER_PGD];
    128-256 - copied from kernel
 
 page
- 31 ... 14
+ 31 ... 13 - this is what it should be
 
  31 ... 10
 
