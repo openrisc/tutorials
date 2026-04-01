@@ -119,11 +119,11 @@ In Debian based distributions `qemu-system-or1k` is provided by the `qemu-system
 
 ```bash
 # Look for the qemu system package
-apt-cache update
+sudo apt-get update
 apt-cache show qemu-system-misc | grep Version
 
 # if the version is good
-apt-get install -y qemu-system-misc
+sudo apt-get install -y qemu-system-misc
 ```
 
 Below we can see that in my Ubuntu environment it only provides QEMU 8.2.2.
