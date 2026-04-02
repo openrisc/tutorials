@@ -223,7 +223,7 @@ From pgtable.h:
 ```
 
 The definition of `USER_PTRS_PER_PGD` evaluates to 128. This macro is used to
-reserve the first 128 pfn's for user space leaving pfn's 128 to 255 for kernel
+reserve the first 128 **page frame numbers** or **PFNs** for user space leaving PFNs 128 to 255 for kernel
 space.
 
 #### Physical Addresses
