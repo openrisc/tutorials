@@ -7,7 +7,7 @@ nav_order: 5
 ## OpenRISC Linux
 
 Linux on OpenRISC is the essence of [embedded Linux](https://elinux.org/Main_Page).
-From the FPGA based SoC's, simulators, toolchains, kernel and software it provides a complete
+From the FPGA based SoCs, simulators, toolchains, kernel and software it provides a complete
 open-source software and hardware stack.
 
 In this tutorial we cover the basics of OpenRISC embedded Linux before diving
@@ -15,12 +15,12 @@ into our Linux on OpenRISC tutorials.  We will cover:
 
  * Boot loaders - we need to get Linux onto the system, we will explain how this
    is done.
- * Device tree - how does Linux know what hardware is available in the system
+ * Device tree - how does Linux know what hardware is available in the system?
  * Toolchains - We covered this before, but a quick refresher on Linux
-   specific toolchains
- * Rootfs - Applications
+   specific toolchains.
+ * Rootfs - Applications.
  * Memory layout - we explain how devices, Linux and our user processes
-   share memory space
+   share memory space.
 
 If you wish to skip this you can continue directly with our tutorials:
 
@@ -40,7 +40,7 @@ the entry point.  Traditionally the popular Linux boot loader is
 platforms like OpenRISC Linux more simple loaders are used.  These include:
 
  - For Simulators - or1ksim and QEMU provide built in boot loaders
- - FPGA Boards - For larger FPGA boards with litex support we use the litex bios
+ - FPGA Boards - For larger FPGA boards with LiteX support we use the LiteX BIOS
  - Tiny FPGA Boards - For tiny FPGA boards we use GDB as a simple boot loader
 
 Simulators like `or1ksim` and `QEMU` have the ability to be passed a kernel ELF
@@ -69,7 +69,7 @@ Address `0x100` is the OpenRISC default reset vector.
 
 The device tree file (.dts) is used to specify hardware configuration settings,
 such as base addresses and interrupt numbers for peripherals, main memory, the
-numbers of CPUs in the system and other things. OpenRISC Linux always needs a
+number of CPUs in the system and other things. OpenRISC Linux always needs a
 device tree to boot.  The device tree can be built into the kernel or passed as
 a boot parameter via register `r3`.
 
@@ -79,7 +79,7 @@ with:
  - 1 CPU
  - 1 UART at 0x90000000
  - 32 MB main memory at address 0x0
- - 20 Mhz clock
+ - 20 MHz clock
 
 The device tree will be compiled down to a `.dtb` binary file using the device
 tree compiler (`dtc`) during the build processes.  During the boot process the
@@ -154,7 +154,7 @@ The rootfs is like the Linux distribution for an embedded Linux.
 We provide some [prebuilt rootfs images](https://github.com/stffrdhrn/or1k-rootfs-build) to
 help get you started. The top choices are:
 
- - buildroot - a fully featured rootfs ideal for boards with and sd-card, with
+ - buildroot - a fully featured rootfs ideal for boards with and SD card, with
    well known utilities like `bash`.
  - busybox - a lightweight single binary rootfs, coming in at under 3MB
 
@@ -166,7 +166,7 @@ kernel and hardware devices.  Memory protection between processes is achieved
 using the OpenRISC memory management unit **MMU**.
 
 The OpenRISC MMU uses 8KB (13-bits) pages leaving the most significant 19-bits
-for indexing into a software page table.  The architecture uses a 2-level [page table](linux/mm/page_tables.rst)
+for indexing into a software page table.  The architecture uses a 2-level [page table](https://docs.kernel.org/mm/page_tables.html)
 using 8-bits to index a 256 entry page directory and 11-bits to index 2048 page table entry leaf nodes.
 
 The **page global directory** or **pgd** looks like the following in OpenRISC:
@@ -228,34 +228,34 @@ space.
 
 #### Physical Addresses
 
-In Linux SoC's our data caches are configured with a 31-bit addresses width.
+In Linux SoCs our data caches are configured with a 31-bit addresses width.
 This means only the first 2GB of physical memory space addresses are cached.  This is useful
 as it guarantees that all operations on addresses above `0x80000000` are not cached.
 We use these upper address ranges for IO devices which we do not want to be
 cached.
 
-This means that technically OpenRISC systems cannot have more than 2GiB of main
+This means that technically OpenRISC systems cannot have more than 2GB of main
 memory. However, due to the OpenRISC kernel not supporting highmem and some
-other reserved address space, the main memory limit is about 768MiB; which is
+other reserved address space, the main memory limit is about 768MB; which is
 plenty for OpenRISC embedded system.
 
 The physical address space looks like the follow:
 
 ```
-Address Range      | Description
--------------------+---------------------------
-0x80000000 ~ (2GB) | IO space, not cached
--------------------+---------------------------
-0x00000000 ~ (2GB) | Physical RAM space, cached
+Address Range       | Description
+--------------------+---------------------------
+0x80000000 ~ (2GB)  | IO space, not cached
+--------------------+---------------------------
+0x00000000 ~ (2GB)  | Physical RAM space, cached
 ```
 
 #### Virtual Memory
 
 Virtual memory in Linux is split between kernel space and user space as below.
-There is 1GB reserved for the kernel, 2GB reserved for user space and a 1GB hole
+There is 1GB reserved for the kernel, 2GiB reserved for user space and a 1GiB hole
 which we reserve for other purposes.
 
-OpenRISC uses 8kb pages.
+OpenRISC uses 8KB pages.
 
 ```
 | Address Range           | Defines                       | Size  | Usage
@@ -265,7 +265,7 @@ OpenRISC uses 8kb pages.
 | 0xc0000000 - 0xf7fbffff | KERNELBASE                    | ~1GB  | direct mapped, kernel space (30-bits)
 +-------------------------+-------------------------------+-------+-------
 | 0xbc000000 - 0xbfffffff | VMALLOC_START to VMALLOC_END) | 64MB  | vmalloc/ioremap
-| 0x80000000 - 0xbbffffff |                               | ~1GB  | hole
+| 0x80000000 - 0xbbffffff |                               | ~1GB  | Reserved
 +-------------------------+-------------------------------+-------+------
 | 0x00002000 - 0x7fffffff | TASK_SIZE                     | ~2GB  | User space
 | 0x00000000 - 0x00001fff |                               | 8KB   | Unmapped page, NULL catch
@@ -426,5 +426,5 @@ We can see a few things looking at this map:
 
 We have gone over some of the internals of the OpenRISC Linux implementation.
 We hope this helps you in the understanding of the fundamentals of embedded
-Linux and will improve your understanding of the Linux bring up tutorials that
+Linux and will improve your understanding of the Linux bring-up tutorials that
 follow.
