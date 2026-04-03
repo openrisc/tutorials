@@ -202,17 +202,8 @@ and derive the physical address as below:
  +-----------------> [21:24] PGD index
 ```
 
-These are defined in [page.h](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/openrisc/include/asm/page.h)
-and [pgtable.h](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/openrisc/include/asm/pgtable.h)
+These are defined in [pgtable.h](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/openrisc/include/asm/pgtable.h)
 as follows:
-
-From **page.h**:
-
-```c
-#define PAGE_SHIFT      13                               // 8KB
-```
-
-From **pgtable.h**:
 
 ```c
 #define PGDIR_SHIFT     (PAGE_SHIFT + (PAGE_SHIFT-2))    // 24
@@ -223,6 +214,7 @@ From **pgtable.h**:
 #define USER_PTRS_PER_PGD       (TASK_SIZE/PGDIR_SIZE)
 ```
 
+The definition of `PAGE_SHIFT` is 13 and comes from Kconfig as on OpenRISC we select `HAVE_PAGE_SIZE_8KB`.
 The definition of `USER_PTRS_PER_PGD` evaluates to 128. This macro is used to
 reserve the first 128 **page frame numbers** or **PFNs** for user space leaving PFNs 128 to 255 for kernel
 space.
