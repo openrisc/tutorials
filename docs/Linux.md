@@ -173,7 +173,6 @@ The **page global directory** or **pgd** looks like the following in OpenRISC:
 
 ```
         PGD (256 entries)
-
   --> +-----+           PTE (2048 entries)
       | ptr |-------> +-----+
       | ptr |-        | ptr |-------> PAGE
@@ -203,17 +202,19 @@ and derive the physical address as below:
  +-----------------> [21:24] PGD index
 ```
 
-The are defined in `page.h` and `pgtable.h` as follows:
+These are defined in [page.h](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/openrisc/include/asm/page.h)
+and [pgtable.h](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/openrisc/include/asm/pgtable.h)
+as follows:
 
-From page.h:
+From **page.h**:
 
-```
+```c
 #define PAGE_SHIFT      13                               // 8KB
 ```
 
-From pgtable.h:
+From **pgtable.h**:
 
-```
+```c
 #define PGDIR_SHIFT     (PAGE_SHIFT + (PAGE_SHIFT-2))    // 24
 #define PTRS_PER_PTE    (1UL << (PAGE_SHIFT-2))          // 2048
 #define PTRS_PER_PGD    (1UL << (32-PGDIR_SHIFT))        // 256
